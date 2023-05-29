@@ -49,7 +49,7 @@ public class AuthenticationController {
     userDto.setEmail(user.getEmail());
     userDto.setPassword(user.getPassword());
     userDto.setRole(user.getRole());
-    userDto.setClubs(user.getClubs());
+    userDto.setClubs(userDto.getClubs());
 
     return userDto;
   }

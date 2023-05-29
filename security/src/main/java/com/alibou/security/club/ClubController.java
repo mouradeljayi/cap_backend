@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/club")
@@ -23,6 +25,7 @@ public class ClubController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<List<Club>> getAllClub() {
         return ResponseEntity.ok(clubService.findAllClub());
     }
@@ -53,11 +56,23 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
+
     @PostMapping("/{userId}/clubs/{clubId}")
-    public ResponseEntity<String> addUserToClub(@PathVariable Integer userId, @PathVariable Integer clubId) {
+    public ResponseEntity<Map<String, String>> addUserToClub(@PathVariable Integer userId, @PathVariable Integer clubId) {
         clubService.addUserToClub(userId, clubId);
-        return ResponseEntity.ok("User added to club successfully.");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User added to club successfully.");
+        return ResponseEntity.ok(response);
     }
+
+
+    @GetMapping("/users/{userId}/clubs/{clubId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<Boolean> checkUserMembership(@PathVariable Integer userId, @PathVariable Integer clubId) {
+        boolean isMember = clubService.isUserMember(userId, clubId);
+        return ResponseEntity.ok(isMember);
+    }
+
 
 
 

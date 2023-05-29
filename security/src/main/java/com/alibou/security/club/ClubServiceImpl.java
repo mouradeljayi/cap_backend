@@ -3,6 +3,7 @@ package com.alibou.security.club;
 import com.alibou.security.user.User;
 import com.alibou.security.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,6 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public Club updatClub(Club club, Integer id) {
-        //Personnel p = personnelRepository.findById(id).get();
         club.setId(id);
         return clubRepository.save(club);
      
@@ -50,6 +50,8 @@ public class ClubServiceImpl implements ClubService {
         return clubRepository.findById(id).get();
     }
 
+    @Override
+    @Transactional
     public void addUserToClub(Integer userId, Integer clubId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found."));
@@ -62,4 +64,15 @@ public class ClubServiceImpl implements ClubService {
         userRepository.save(user);
         clubRepository.save(club);
     }
+
+    @Override
+    public boolean isUserMember(Integer userId, Integer clubId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found."));
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found."));
+
+        return club.getUsers().contains(user);
+    }
+
 }

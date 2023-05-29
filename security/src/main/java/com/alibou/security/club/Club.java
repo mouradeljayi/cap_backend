@@ -1,6 +1,7 @@
 package com.alibou.security.club;
 
 import com.alibou.security.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,8 +24,11 @@ public class Club {
     public String leader;
     public String description;
     public String image;
+    @Transient
+    private boolean isMember;
+    @JsonIgnore
     @ManyToMany(mappedBy = "clubs")
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
 
 
 }

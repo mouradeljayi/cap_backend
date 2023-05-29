@@ -3,10 +3,7 @@ package com.alibou.security.user;
 import com.alibou.security.club.Club;
 import jakarta.persistence.*;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +33,10 @@ public class User implements UserDetails {
   private String password;
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @JoinTable(name = "user_club",
+  @JoinTable(name = "club_user",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "club_id"))
-  private Set<Club> clubs = new HashSet<>();
+  private Set<Club> clubs;
 
 
 
@@ -47,8 +44,16 @@ public class User implements UserDetails {
   private String role;
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    User other = (User) o;
+    return Objects.equals(id, other.id);
+  }
+
+  @Override
   public int hashCode() {
-    return id != null ? id.hashCode() : super.hashCode();
+    return Objects.hash(id);
   }
 
   @Override

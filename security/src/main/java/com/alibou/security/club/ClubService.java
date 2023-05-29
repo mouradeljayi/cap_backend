@@ -8,6 +8,7 @@ public interface ClubService {
      List<Club> findAllClub();
      void deleteClub(Integer id);
      Club findClub(Integer id);
-     Club updatClub(Club personnel, Integer id);
+     Club updatClub(Club club, Integer id);
      void addUserToClub(Integer userId, Integer clubId);
+     boolean isUserMember(Integer userId, Integer clubId);
 }
